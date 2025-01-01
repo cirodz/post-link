@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Luis",
+    "apellidos": "Guatemala Mtz",
+    "contrasena": "admin",
+    "correo": "lguatemala@gmail.com",
+    "nombre_usuario": "lguatemala"
+  },
+  {
+    "id": 2,
+    "nombre": "José",
+    "apellidos": "Collí Fernández",
+    "contrasena": "admin",
+    "correo": "jcolli@gmail.com",
+    "nombre_usuario": "jcolli"
+  }
+]
