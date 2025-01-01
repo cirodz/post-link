@@ -16,9 +16,8 @@ export const useSessionStore = create<SessionState>()(
       user: null,
       login: async (session: LoginData): Promise<boolean> => {
         try {
-          const user = await LoginRepository.login(session);
+          const user:Usuario | null = await LoginRepository.login(session);
           if (user == null) return false;
-
           set({ user });
           return true;
         } catch (error) {

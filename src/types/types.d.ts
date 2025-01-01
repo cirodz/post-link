@@ -1,4 +1,4 @@
-export interface Usuario {
+export interface UsuarioEntity {
   id: number;
   nombre: string;
   apellidos: string;
@@ -6,7 +6,7 @@ export interface Usuario {
   contrasena: string;
   nombre_usuario: string;
 }
-
+type Usuario = Omit<UsuarioEntity, 'contrasena'>;
 export interface LoginData {
   correo: string;
   contrasena: string;
