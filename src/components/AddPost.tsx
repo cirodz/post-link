@@ -1,4 +1,4 @@
-import { Avatar, Button, IconButton, Input, ListItemAvatar, styled, TextField } from '@mui/material'
+import { Avatar, Button, Input, ListItemAvatar, styled, TextField } from '@mui/material'
 import { useStorePosts } from '../context/useStorePosts';
 import { PostEntity } from '../types/types';
 import { useState } from 'react';
