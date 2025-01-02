@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import { LoginPage } from './pages/login/LoginPage'
 
+import { LoginPage } from './pages/login/LoginPage'
+import HomePage from './pages/home/HomePage'
+import ListPosts from './components/ListPosts'
+import AppBarComponent from './components/AppBarComponent'
+import AdminView from './components/AdminView'
+import { Container } from '@mui/material'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <LoginPage />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AppBarComponent />
+        {/* <LoginPage /> */}
+        <Container>
+          <AdminView />
+        </Container>
+      </LocalizationProvider>
     </>
   )
 }
