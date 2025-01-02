@@ -11,7 +11,6 @@ import ShowImage from './ShowImage';
 import { validatePostData } from '../utils/utils';
 import { useLoadImage } from '../hooks/useLoadImage';
 
-
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -39,7 +38,7 @@ const AddPost: React.FC = () => {
 
         const newPostData = {
             contador_likes: 0,
-            autor: 2,
+            autor: UserInfo?.id,
             fecha_creacion: fechaCreacion?.toDate() ?? new Date(),
             fecha_publicacion: fechaPublicacion?.toDate() ?? new Date(),
             foto: postData.foto ? postData.foto as string : null,
