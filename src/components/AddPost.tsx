@@ -1,4 +1,4 @@
-import { Avatar, Button, IconButton, Input, ListItemAvatar, styled, TextField } from '@mui/material'
+import { Avatar, Button, Input, ListItemAvatar, styled, TextField } from '@mui/material'
 import { useStorePosts } from '../context/useStorePosts';
 import { PostEntity } from '../types/types';
 import { useState } from 'react';
@@ -10,7 +10,6 @@ import ShowErrors from './ShowErrors';
 import ShowImage from './ShowImage';
 import { validatePostData } from '../utils/utils';
 import { useLoadImage } from '../hooks/useLoadImage';
-
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -39,7 +38,7 @@ const AddPost: React.FC = () => {
 
         const newPostData = {
             contador_likes: 0,
-            autor: 2,
+            autor: UserInfo?.id,
             fecha_creacion: fechaCreacion?.toDate() ?? new Date(),
             fecha_publicacion: fechaPublicacion?.toDate() ?? new Date(),
             foto: postData.foto ? postData.foto as string : null,

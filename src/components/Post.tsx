@@ -1,42 +1,16 @@
-import { PostWithoutAutor, type PostEntity } from '../types/types';
-import { Avatar, Box, Button, Divider, Icon, IconButton, List, ListItem, ListItemAvatar, ListItemText, Modal, Paper, Typography } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
-import EditIcon from '@mui/icons-material/Edit';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FormEditPost from './FormEditPost';
+import { type PostEntity } from '../types/types';
+import { Avatar, Paper, Typography } from '@mui/material'
+import { Fragment } from 'react'
+import AdminOptions from './AdminOptionProps';
+import { useSessionStore } from '../context/useStore';
+import LikePost from './LikePost';
 import { useStorePosts } from '../context/useStorePosts';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 export interface PostProps {
     PostProps: PostEntity;
 }
 
-
 const Post: React.FC<PostProps> = ({ PostProps }) => {
-
-    const likePost = useStorePosts(state => state.likePost);
-    const deletePost = useStorePosts(state => state.DeletePost);
-    const editPost = useStorePosts(state => state.EditPost);
-
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleLikePost = (postId: string) => {
-        likePost(postId);
-    }
-
-    const handleDeletePost = (postId: string) => {
-        deletePost(postId);
-    }
-
-    const handleSave = (updatedPost: PostWithoutAutor) => {
-        editPost(updatedPost);
-    };
 
     return (
         <>
@@ -98,47 +72,13 @@ const Post: React.FC<PostProps> = ({ PostProps }) => {
                                 Fecha de publicación: {new Date(PostProps.fecha_publicacion as Date).toDateString()}
                             </Typography>
                         </div>
-
+                        <></>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <LikePost contador_likes={PostProps.contador_likes} postId={PostProps.id as string} />
+                            <AdminOptions PostProps={PostProps} ></AdminOptions>
+                        </div>
                     </Fragment>
                 </div>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'start'
-                }}>
-                    <div style={{ display: 'flex', alignItems: "center", gap: 10 }}>
-                        {
-                            PostProps.contador_likes > 0 ?
-                                <IconButton onClick={() => (handleLikePost(PostProps.id as string))} sx={{ border: 'none' }} aria-label="like" size="small">
-                                    <FavoriteIcon sx={{ color: 'red' }} fontSize='small' />
-                                </IconButton>
-                                :
-                                <IconButton onClick={() => (handleLikePost(PostProps.id as string))} sx={{ border: 'none' }} aria-label="like" size="small">
-                                    <FavoriteBorderRoundedIcon fontSize='small' />
-                                </IconButton>
-                        }
-                        <span style={{ fontSize: '15px', color: '#929292', marginLeft: '5px' }}>
-                            {PostProps.contador_likes}
-                        </span>
-                        <IconButton onClick={handleOpen}>
-                            <EditIcon fontSize='small' />
-                        </IconButton>
-                        <IconButton onClick={() => (handleDeletePost(PostProps.id as string))}>
-                            <DeleteIcon fontSize='small' />
-                        </IconButton>
-                    </div>
-                </div>
-
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="child-modal-title"
-                    aria-describedby="child-modal-description"
-                >
-                    <FormEditPost
-                        onSave={handleSave}
-                        PostEdit={{ ...PostProps }}
-                        closeModal={handleClose} ></FormEditPost>
-                </Modal>
             </Paper >
 
         </ >
