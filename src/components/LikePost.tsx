@@ -25,7 +25,7 @@ const LikePost: React.FC<LikePostProps> = ({ postId, contador_likes }) => {
                     :
                     <IconButton onClick={() => (handleLikePost(postId as string))} sx={{ border: 'none' }} aria-label="like" size="small">
                         <FavoriteBorderRoundedIcon fontSize='small' />
-                    </IconButton>
+                    </IconButton>   
             }
             <span style={{ fontSize: '15px', color: '#929292', marginLeft: '5px' }}>
                 {contador_likes}

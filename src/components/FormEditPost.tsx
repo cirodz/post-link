@@ -1,29 +1,31 @@
 
 import React, { useState } from "react";
-import { Box, TextField, Button, Stack } from "@mui/material";
+import { Box, TextField, Button, Stack, Input, styled } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { PostWithoutAutor } from "../types/types";
+import { PostEntity } from "../types/types";
 import ShowImage from "./ShowImage";
 import { useLoadImage } from "../hooks/useLoadImage";
+import { validatePostData } from "../utils/utils";
+import ShowErrors from "./ShowErrors";
+import ImageIcon from '@mui/icons-material/Image';
 
 interface FormEditProps {
-    PostEdit: PostWithoutAutor
+    PostEdit: PostEntity
     closeModal: () => void;
     onSave: (updatedPost: any) => void;
 }
-const style = {
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const FormEditPost: React.FC<FormEditProps> = (props) => {
     const [fechaCreacion, setfechaCreacion] = useState<Dayjs | null>(
@@ -32,32 +34,26 @@ const FormEditPost: React.FC<FormEditProps> = (props) => {
     const [fechaPublicacion, setfechaPublicacion] = useState<Dayjs | null>(
         dayjs(props.PostEdit.fecha_publicacion)
     );
+    const [postDataErrors, setpostDataErrors] = useState<Record<string, string>>({});
 
-    const [postEdit, setPostEdit] = useState({
+    const [postEdit, setPostEdit] = useState<PostEntity>({
         id: props.PostEdit.id,
         titulo: props.PostEdit.titulo,
         descripcion: props.PostEdit.descripcion,
         foto: props.PostEdit.foto,
+        autor: props.PostEdit.autor,
+        fecha_creacion: props.PostEdit.fecha_creacion,
+        fecha_publicacion: props.PostEdit.fecha_publicacion,
         contador_likes: props.PostEdit.contador_likes,
     });
 
     const handleInputChange = (e: any) => {
-        let value = e.target.value;
-
-        if (e.target.name === 'contador_likes') {
-            value = parseInt(value, 10);
-            setPostEdit(
-                {
-                    ...postEdit,
-                    contador_likes: value,
-                }
-            );
-            return;
-        }
-
+        const { name, value } = e.target;
+        const parsedValue = name === 'contador_likes' ? parseInt(value, 10) || 0 : value;
+        setpostDataErrors({});
         setPostEdit((post) => ({
             ...post,
-            [e.target.name]: e.target.value,
+            [name]: parsedValue,
         }));
     };
 
@@ -67,6 +63,11 @@ const FormEditPost: React.FC<FormEditProps> = (props) => {
             fecha_creacion: fechaCreacion?.toDate(),
             fecha_publicacion: fechaPublicacion?.toDate(),
         };
+        const errors = validatePostData(updatedPost);
+        if (Object.keys(errors).length > 0) {
+            setpostDataErrors(errors);
+            return;
+        }
         props.onSave(updatedPost);
         props.closeModal();
     };
@@ -86,10 +87,10 @@ const FormEditPost: React.FC<FormEditProps> = (props) => {
 
     return (
         <>
-            <Box sx={style}>
+            <Box >
                 <h2 id="child-modal-title">Editar publicación</h2>
 
-                <Stack spacing={4}>
+                <Stack spacing={2}>
                     <TextField
                         value={postEdit.id}
                         label="Identificador"
@@ -121,16 +122,32 @@ const FormEditPost: React.FC<FormEditProps> = (props) => {
                         value={fechaPublicacion}
                         onChange={(newValue) => setfechaPublicacion(newValue)}
                     />
+                    {
+                        postEdit.foto ? <ShowImage handleChangeImage={handleChangeImage} handleClearImage={handleClearImage} image={postEdit.foto ?? ''} />
+                            :
+                            <>
+                                <Button
+                                    variant="outlined"
+                                    component="label"
+                                    tabIndex={-1}
+                                    color='inherit'
+                                >
+                                    <ImageIcon />
+                                    Agregar imagen
+                                    <VisuallyHiddenInput
+                                        type="file"
+                                        onChange={handleChangeImage}
+                                        multiple
+                                    />
+                                </Button>
+                            </>
+                    }
 
-                    <ShowImage handleChangeImage={handleChangeImage} handleClearImage={handleClearImage} image={postEdit.foto ?? ''} />
-
-                    <TextField
+                    <Input
                         value={postEdit.contador_likes}
-                        label="likes"
-                        variant="standard"
                         name="contador_likes"
                         type="number"
-                        onChange={(e) =>handleInputChange(e)}
+                        onChange={(e) => handleInputChange(e)}
                     />
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 20 }}>
                         <Button
@@ -149,6 +166,9 @@ const FormEditPost: React.FC<FormEditProps> = (props) => {
                         </Button>
                     </div>
                 </Stack>
+                {
+                    postDataErrors && Object.keys(postDataErrors).length > 0 && <ShowErrors errorsList={postDataErrors} />
+                }
             </Box>
         </>
     );

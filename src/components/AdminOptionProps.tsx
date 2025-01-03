@@ -1,8 +1,8 @@
-import { IconButton, Modal } from "@mui/material"
+import { Dialog, DialogContent, IconButton } from "@mui/material"
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStorePosts } from '../context/useStorePosts';
-import { PostEntity, PostWithoutAutor } from "../types/types";
+import { PostEntity } from "../types/types";
 import FormEditPost from "./FormEditPost";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ const AdminOptions: React.FC<AdminOptionProps> = (AdminOptionProps) => {
         deletePost(postId);
     }
 
-    const handleSave = (updatedPost: PostWithoutAutor) => {
+    const handleSave = (updatedPost: PostEntity) => {
         editPost(updatedPost);
     };
 
@@ -46,17 +46,20 @@ const AdminOptions: React.FC<AdminOptionProps> = (AdminOptionProps) => {
                 </IconButton>
             </div>
 
-            <Modal
+            <Dialog
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="child-modal-title"
-                aria-describedby="child-modal-description"
+                aria-labelledby="modal-edit-post"
+                aria-describedby="modal-to-edit-post"
             >
-                <FormEditPost
-                    onSave={handleSave}
-                    PostEdit={{ ...AdminOptionProps.PostProps }}
-                    closeModal={handleClose} ></FormEditPost>
-            </Modal>
+                <DialogContent dividers>
+                    <FormEditPost
+                        onSave={handleSave}
+                        PostEdit={{ ...AdminOptionProps.PostProps }}
+                        closeModal={handleClose} ></FormEditPost>
+                </DialogContent>
+
+            </Dialog>
         </div>
     )
 }

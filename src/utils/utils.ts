@@ -21,5 +21,9 @@ export const validatePostData = (data: PostEntity) => {
     errors.titulo = "Ingrese un titulo";
   }
 
+  if ( data.contador_likes < 0) {
+    errors.contador_likes = "Ingrese un número válido de likes.";
+  }
+
   return errors;
 };

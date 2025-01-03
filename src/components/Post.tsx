@@ -1,10 +1,9 @@
 import { type PostEntity } from '../types/types';
-import { Avatar, Paper, Typography } from '@mui/material'
+import { Avatar, Box, Paper, Typography } from '@mui/material'
 import { Fragment } from 'react'
 import AdminOptions from './AdminOptionProps';
 import { useSessionStore } from '../context/useStore';
 import LikePost from './LikePost';
-import { useStorePosts } from '../context/useStorePosts';
 
 export interface PostProps {
     PostProps: PostEntity;
@@ -12,11 +11,13 @@ export interface PostProps {
 
 const Post: React.FC<PostProps> = ({ PostProps }) => {
 
+    const UserInfo = useSessionStore(state => state.user);
+
     return (
         <>
-            <Paper square={true} elevation={0} style={{ display: 'flex', flexDirection: 'row', width: '100%', padding: '16px', borderBottom: '1px solid #e0e0e0', }}>
+            <Paper square={true} elevation={0} style={{ display: 'flex', flexDirection: 'row', padding: '16px', borderBottom: '1px solid #e0e0e0', }}>
                 <div style={{ display: 'flex', marginRight: '1rem' }}>
-                    <Avatar alt="sd" src='sadas' />
+                    <Avatar alt={PostProps.autor} src='notloadimage' />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
@@ -26,7 +27,7 @@ const Post: React.FC<PostProps> = ({ PostProps }) => {
                         sx={{ color: 'text.primary', display: 'flex' }}
                     >
                         <b >
-                            Ciro
+                            {PostProps.autor}
                         </b>
                     </Typography>
                     <div >
@@ -42,7 +43,6 @@ const Post: React.FC<PostProps> = ({ PostProps }) => {
                     </div>
                     <Fragment>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-
                             <Typography component="span"
                                 variant="body2"
                                 color='text.primary'>
@@ -57,25 +57,39 @@ const Post: React.FC<PostProps> = ({ PostProps }) => {
                                         max-height='1080px'
                                         style={{ width: '100%', height: 'auto', display: 'block' }}
                                     />
-
                                 </div>
                             )}
 
                         </div>
                         <br></br>
-                        <div style={{ display: 'flex', gap: 10 }}>
+                        <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
                             <Typography style={{ color: '#929292', fontSize: '13px' }} >
-                                Fecha de creación: {new Date(PostProps.fecha_creacion as Date).toDateString()}
+                                Fecha de creación: {PostProps.fecha_creacion
+                                    ? new Date(PostProps.fecha_creacion).toLocaleDateString('es-ES', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })
+                                    : 'Fecha no disponible'}
                             </Typography>
-                            <span>·</span>
+
                             <Typography style={{ color: '#929292', fontSize: '13px' }} >
-                                Fecha de publicación: {new Date(PostProps.fecha_publicacion as Date).toDateString()}
+                                Fecha de publicación: {PostProps.fecha_publicacion
+                                    ? new Date(PostProps.fecha_publicacion).toLocaleDateString('es-ES', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })
+                                    : 'Fecha no disponible'}
+
                             </Typography>
-                        </div>
+                        </Box>
                         <></>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <LikePost contador_likes={PostProps.contador_likes} postId={PostProps.id as string} />
-                            <AdminOptions PostProps={PostProps} ></AdminOptions>
+                            {
+                                UserInfo && <AdminOptions PostProps={PostProps} ></AdminOptions>
+                            }
                         </div>
                     </Fragment>
                 </div>

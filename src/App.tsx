@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <AppBarComponent />
-          <Container>
+          <Container >
             <RoutesComponent />
           </Container>
         </LocalizationProvider>

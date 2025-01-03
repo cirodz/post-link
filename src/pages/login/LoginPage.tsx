@@ -1,14 +1,16 @@
-import { AppBar, Button, Container, IconButton, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material"
+import { Button, Container, Input, Paper, Stack, Typography } from "@mui/material"
 import { useState } from "react"
 import { useSessionStore } from "../../context/useStore"
 import { LoginData } from "../../types/types";
+import { useNavigate } from "react-router";
 
 
 
 export const LoginPage = () => {
 
+    let navigate = useNavigate();
+
     const login = useSessionStore(state => state.login);
-    const logout = useSessionStore(state => state.logout);
 
     const [error, seterror] = useState<boolean>(false)
     const [dataForm, setDataForm] = useState<LoginData>(
@@ -32,11 +34,18 @@ export const LoginPage = () => {
         const doLogin = await login({ contrasena: dataForm.contrasena, correo: dataForm.correo });
         if (!doLogin) {
             seterror(true)
+        } else {
+            navigate("/");
         }
     }
     return (
         <>
-            <Container >
+            <Container sx={{
+                marginTop: {
+                    xs: '3rem',
+                    lg: '16rem'
+                }
+            }}>
                 <Stack
                     display='flex'
                     direction={{ xs: 'column', sm: 'row' }}
@@ -51,11 +60,11 @@ export const LoginPage = () => {
                         <Typography sx={{ textAlign: 'center' }} pb={2} variant="h5">Iniciar sesión</Typography>
                         <Paper sx={{ padding: 3 }} elevation={3} >
                             <Stack sx={{ width: '17rem' }} spacing={2}>
-                                <Typography>Correo</Typography>
-                                <TextField error={error} id="email" type="email" onChange={handleChange} name="correo" value={dataForm.correo} variant="outlined" />
+                                <Typography><b>Correo</b></Typography>
+                                <Input required={true} error={error} id="email" type="email" onChange={handleChange} name="correo" value={dataForm.correo} />
 
-                                <Typography>Contraseña</Typography>
-                                <TextField error={error} type="password" onChange={handleChange} name="contrasena" value={dataForm.contrasena} variant="outlined" />
+                                <Typography><b>Contraseña</b></Typography>
+                                <Input required={true} error={error} type="password" onChange={handleChange} name="contrasena" value={dataForm.contrasena} />
                                 {
                                     error && <Typography sx={{ textAlign: 'center' }} color='error'>Correo o contraseña incorrectos</Typography>
                                 }

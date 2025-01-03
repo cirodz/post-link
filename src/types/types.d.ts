@@ -19,7 +19,7 @@ export interface PostEntity {
   fecha_creacion?: Date | null;
   fecha_publicacion?: Date | null;
   foto?: string | null;
-  autor?: number;
+  autor: string;
   contador_likes: number;
 }
 

@@ -1,4 +1,4 @@
-import { Avatar, Button, Input, ListItemAvatar, styled, TextField } from '@mui/material'
+import { Avatar, Button, Input, ListItemAvatar, Stack, styled, TextField } from '@mui/material'
 import { useStorePosts } from '../context/useStorePosts';
 import { PostEntity } from '../types/types';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ const AddPost: React.FC = () => {
 
     const [fechaCreacion, setfechaCreacion] = useState<Dayjs | null>(dayjs(new Date()));
     const [fechaPublicacion, setfechaPublicacion] = useState<Dayjs | null>(dayjs(new Date()));
-    const [postData, setpostData] = useState<PostEntity>({ contador_likes: 0 })
+    const [postData, setpostData] = useState<PostEntity>({ contador_likes: 0, autor: '', descripcion: '', titulo: '' })
 
     const [postDataErrors, setpostDataErrors] = useState<Record<string, string>>({});
 
@@ -38,7 +38,7 @@ const AddPost: React.FC = () => {
 
         const newPostData = {
             contador_likes: 0,
-            autor: UserInfo?.id,
+            autor: UserInfo?.nombre + ' ' + UserInfo?.apellidos,
             fecha_creacion: fechaCreacion?.toDate() ?? new Date(),
             fecha_publicacion: fechaPublicacion?.toDate() ?? new Date(),
             foto: postData.foto ? postData.foto as string : null,
@@ -47,7 +47,6 @@ const AddPost: React.FC = () => {
         };
         const errors = validatePostData(newPostData);
         if (Object.keys(errors).length > 0) {
-            console.log("Errores de validación:", errors);
             setpostDataErrors(errors);
             return;
         }
@@ -57,7 +56,7 @@ const AddPost: React.FC = () => {
     }
 
     const resetValues = () => {
-        setpostData({ contador_likes: 0 });
+        setpostData({ contador_likes: 0, autor: '', descripcion: '', titulo: '' });
         setpostDataErrors({});
         setfechaCreacion(dayjs(new Date()));
         setfechaPublicacion(dayjs(new Date()));
@@ -87,7 +86,7 @@ const AddPost: React.FC = () => {
     }
 
     return (
-        <div style={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column', width: '100%', padding: '16px', borderBottom: '1px solid #e0e0e0', }}>
+        <div style={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column', padding: '16px', borderBottom: '1px solid #e0e0e0', }}>
             <div style={{ display: 'flex', width: '100%' }}>
                 <ListItemAvatar>
                     <Avatar alt="sd" src='sadas' />
@@ -113,9 +112,8 @@ const AddPost: React.FC = () => {
 
                 </div>
             </div>
-
             <div style={{ display: 'flex', justifyContent: 'start', gap: 30, marginTop: '1rem', width: '100%' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', gap: 30 }}>
+                <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignContent: 'center', gap: 5 }} style={{ width: '100%' }} >
                     <DatePicker
                         label="seleccionar fecha de creación"
                         value={fechaCreacion}
@@ -129,8 +127,6 @@ const AddPost: React.FC = () => {
                         onChange={handleChangeDatePublicacion}
                     />
 
-                </div>
-                <div style={{ display: 'flex' }}>
                     <Button
                         component="label"
                         tabIndex={-1}
@@ -144,7 +140,8 @@ const AddPost: React.FC = () => {
                             multiple
                         />
                     </Button>
-                </div>
+
+                </Stack>
             </div>
             {
                 postData.foto && <ShowImage handleClearImage={handleClearImage} image={postData.foto as string} />
@@ -157,7 +154,7 @@ const AddPost: React.FC = () => {
                 <Button onClick={handleAddPost} variant='contained' fullWidth>Postear</Button>
             </div>
 
-        </div>
+        </div >
     );
 }
 
